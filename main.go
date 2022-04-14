@@ -25,6 +25,12 @@ func faqHandler(w http.ResponseWriter, r *http.Request) {
 	`)
 }
 
+func galleriesHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	galleryID := chi.URLParam(r, "galleryID")
+	fmt.Fprint(w, "<h1>Gallery ID:"+galleryID+"</h1>")
+}
+
 type Router struct{}
 
 func (router Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -45,6 +51,7 @@ func main() {
 	r.Get("/", homeHandler)
 	r.Get("/contact", contactHandler)
 	r.Get("/faq", faqHandler)
+	r.Get("/galleries/{galleryID}", galleriesHandler)
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Page not found", http.StatusNotFound)
 	})
