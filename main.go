@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
 )
@@ -40,9 +41,15 @@ func (router Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	var router Router
+	r := chi.NewRouter()
+	r.Get("/", homeHandler)
+	r.Get("/contact", contactHandler)
+	r.Get("/faq", faqHandler)
+	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "Page not found", http.StatusNotFound)
+	})
 	fmt.Println("Starting the server on :8080...")
-	err := http.ListenAndServe(":8080", router)
+	err := http.ListenAndServe(":8080", r)
 	if err != nil {
 		log.Fatalf("failed to connect, %s", err)
 	}
